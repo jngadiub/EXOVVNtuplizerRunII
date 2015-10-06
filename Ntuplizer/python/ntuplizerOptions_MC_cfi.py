@@ -34,9 +34,9 @@ config["DOAK10TRIMMEDRECLUSTERING"] = False
 config["DOHBBTAG"] = False #Higgs-tagger
 
 #--------- MET reclustering ----------#
-config["DOMETRECLUSTERING"] = False
+config["DOMETRECLUSTERING"] = True
 
 #--------- JEC ----------#
 config["CORRJETSONTHEFLY"] = True
-config["CORRMETONTHEFLY"] = True
+config["CORRMETONTHEFLY"] = False
 config["GETJECFROMDBFILE"] = False # If not yet in global tag, but db file available

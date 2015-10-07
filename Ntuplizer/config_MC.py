@@ -20,7 +20,7 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 options = VarParsing.VarParsing ('analysis')
 
 
-options.maxEvents = -1
+options.maxEvents = 1
 
 
 #data file
@@ -69,7 +69,7 @@ process.MessageLogger.categories.append('Ntuple')
 process.MessageLogger.cerr.INFO = cms.untracked.PSet(
     limit = cms.untracked.int32(1)
 )
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+process.MessageLogger.cerr.FwkReport.reportEvery = 1
 
 ####### Define conditions ##########
 #process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
@@ -595,11 +595,13 @@ jecLevelsAK4chs = []
 jecLevelsAK4 = []
 jecLevelsAK8Puppi = []
 jecLevelsForMET = []
-
+jecAK8chsUncFile = "JEC/MCRUN2_74_V9::All_Uncertainty_AK8PFchs.txt"
+jecAK4chsUncFile = "JEC/MCRUN2_74_V9::All_Uncertainty_AK4PFchs.txt"
+     
 JECprefix = "Summer15_50nsV5"
 if config["BUNCHSPACING"] == 25:
    JECprefix = "Summer15_25nsV2"
-
+     
 if config["CORRJETSONTHEFLY"]:
    if config["RUNONMC"]:
      jecLevelsAK8chs = [
@@ -621,6 +623,8 @@ if config["CORRJETSONTHEFLY"]:
      	 'JEC/%s_MC_L3Absolute_AK4PFchs.txt'%(JECprefix)
        ]
    else:
+     jecAK8chsUncFile = ""
+     jecAK4chsUncFile = ""
      jecLevelsAK8chs = [
      	 'JEC/%s_DATA_L1FastJet_AK8PFchs.txt'%(JECprefix), #JEC for 74X
      	 'JEC/%s_DATA_L2Relative_AK8PFchs.txt'%(JECprefix),
@@ -725,9 +729,11 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     triggerprescales = cms.InputTag("patTrigger"),
     noiseFilter = cms.InputTag('TriggerResults','', hltFiltersProcessName),
     jecAK8chsPayloadNames = cms.vstring( jecLevelsAK8chs ),
+    jecAK8chsUnc = cms.string( jecAK8chsUncFile ),
     jecAK8GroomedchsPayloadNames = cms.vstring( jecLevelsAK8Groomedchs ),
     jecAK8PuppiPayloadNames = cms.vstring( jecLevelsAK8Puppi ),
     jecAK4chsPayloadNames = cms.vstring( jecLevelsAK4chs ),
+    jecAK4chsUnc = cms.string( jecAK4chsUncFile ),
     jecpath = cms.string(''),
     
     ## Noise Filters ###################################

@@ -102,7 +102,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
     jetTokens.push_back( prunedjetToken_   );
     jetTokens.push_back( softdropjetToken_ );
     jetTokens.push_back( trimmedjetToken_  );
-    jetTokens.push_back( puppijetToken_  );
+    jetTokens.push_back( puppijetToken_    );
     //jetTokens.push_back( flavourToken_	 );  
   
     std::vector<std::string> jecAK8Labels;
@@ -111,36 +111,41 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
     for( unsigned int v = 0; v < tmpVec.size(); ++v ){
        tmpString = jecpath + tmpVec[v];
        jecAK8Labels.push_back(tmpString);
-    }    
+    }
+    jecAK8Labels.push_back( iConfig.getParameter<std::string>("jecAK8chsUnc") );
+        
     std::vector<std::string> jecAK8GroomedLabels;
     tmpVec.clear(); tmpVec = iConfig.getParameter<std::vector<std::string> >("jecAK8GroomedchsPayloadNames");
     for( unsigned int v = 0; v < tmpVec.size(); ++v ){
        tmpString = jecpath + tmpVec[v];
        jecAK8GroomedLabels.push_back(tmpString);
     }    
+    
     std::vector<std::string> jecAK8PuppiLabels;
     tmpVec.clear(); tmpVec = iConfig.getParameter<std::vector<std::string> >("jecAK8PuppiPayloadNames");
     for( unsigned int v = 0; v < tmpVec.size(); ++v ){
        tmpString = jecpath + tmpVec[v];
        jecAK8PuppiLabels.push_back(tmpString);
     }    
+    
     std::vector<std::string> jecAK4chsLabels;
     tmpVec.clear(); tmpVec = iConfig.getParameter<std::vector<std::string> >("jecAK4chsPayloadNames");
     for( unsigned int v = 0; v < tmpVec.size(); ++v ){
        tmpString = jecpath + tmpVec[v];
        jecAK4chsLabels.push_back(tmpString);
     }
-    
-    nTuplizers_["jets"] = new JetsNtuplizer( jetTokens      , 
-                                             jecAK4chsLabels, 
-					     jecAK8Labels   , 
-					     jecAK8GroomedLabels   , 
-					     jecAK8PuppiLabels   , 
-					     flavourToken_  , 
-					     rhoToken_      , 
-					     vtxToken_      , 
-					     nBranches_     ,
-                                             runFlags	   ); 
+    jecAK4chsLabels.push_back( iConfig.getParameter<std::string>("jecAK4chsUnc") );
+        
+    nTuplizers_["jets"] = new JetsNtuplizer( jetTokens          , 
+                                             jecAK4chsLabels    , 
+					     jecAK8Labels       , 
+					     jecAK8GroomedLabels, 
+					     jecAK8PuppiLabels  , 
+					     flavourToken_      , 
+					     rhoToken_          , 
+					     vtxToken_          , 
+					     nBranches_         ,
+                                             runFlags	       ); 
   }
 
   /*=======================================================================================*/
@@ -176,12 +181,12 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
   /*=======================================================================================*/  
 
   if (runFlags["doMuons"]) {
-    nTuplizers_["muons"]= new MuonsNtuplizer( muonToken_   , 
-                                              vtxToken_    , 
-					      rhoToken_    , 
+    nTuplizers_["muons"]= new MuonsNtuplizer( muonToken_     , 
+                                              vtxToken_      , 
+					      rhoToken_      , 
 					      tauMuTauToken_ ,
-					      nBranches_  ,
-					      runFlags     );
+					      nBranches_     ,
+					      runFlags      );
   }
 						      
   if (runFlags["doElectrons"]) {
@@ -194,13 +199,13 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
     eleIdTokens.push_back(eleHEEPIdMapToken_  );
     eleIdTokens.push_back(eleHEEPId51MapToken_  );
     
-    nTuplizers_["electrons"] = new ElectronsNtuplizer( electronToken_, 
-                                                       vtxToken_     , 
-						       rhoToken_     , 
-						       eleIdTokens   , 
+    nTuplizers_["electrons"] = new ElectronsNtuplizer( electronToken_  , 
+                                                       vtxToken_       , 
+						       rhoToken_       , 
+						       eleIdTokens     , 
 						       tauEleTauToken_ ,
-						       nBranches_  ,
-						       runFlags     );
+						       nBranches_      ,
+						       runFlags       );
   }    
 						      
   if (runFlags["doVertices"]) {
